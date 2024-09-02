@@ -22,7 +22,10 @@ example {n : ℕ} : n ^ 2 ≠ 2 := by
   calc
     n ^ 2 ≤ 1 ^ 2 := by rel [hn]
     _ < 2 := by numbers
-  sorry
+  apply ne_of_gt
+  calc
+    n ^ 2 ≥ 2^2 := by rel[hn]
+    _ > 2 := by numbers
 
 example {x : ℝ} (hx : 2 * x + 1 = 5) : x = 1 ∨ x = 2 := by
   right
@@ -38,7 +41,14 @@ example {x : ℝ} (hx : x ^ 2 - 3 * x + 2 = 0) : x = 1 ∨ x = 2 := by
     (x - 1) * (x - 2) = x ^ 2 - 3 * x + 2 := by ring
     _ = 0 := by rw [hx]
   have h2 := eq_zero_or_eq_zero_of_mul_eq_zero h1
-  sorry
+  obtain h3 | h3 := h2
+  { -- Case 1
+  left
+  calc x = 1 := by addarith[h3] }
+  { -- Case 2
+  right
+  calc x = 2 := by addarith[h3] }
+
 
 example {n : ℤ} : n ^ 2 ≠ 2 := by
   have hn0 := le_or_succ_le n 0
@@ -72,10 +82,32 @@ example {n : ℤ} : n ^ 2 ≠ 2 := by
 
 
 example {x : ℚ} (h : x = 4 ∨ x = -4) : x ^ 2 + 1 = 17 := by
-  sorry
+  obtain h1 | h1 := h
+  {
+    -- case 1
+    calc
+      x ^ 2 + 1 = 4 ^ 2 + 1 := by rw[h1]
+      _ = 17 := by ring
+  }
+  {
+    -- case 2
+    calc
+      x ^ 2 + 1 = (-4)^2 + 1 := by rw[h1]
+      _ = 17 := by ring
+  }
 
 example {x : ℝ} (h : x = 1 ∨ x = 2) : x ^ 2 - 3 * x + 2 = 0 := by
-  sorry
+  obtain h1 | h1 := h
+  {
+    calc
+      x ^2 - 3* x + 2 = 1^2 - 3*1 + 2 := by rw[h1]
+      _ = 0 := by ring
+  }
+  {
+    calc
+      x ^2 - 3* x + 2 = 2^2 - 3*2 + 2 := by rw[h1]
+      _ = 0 := by ring
+  }
 
 example {t : ℚ} (h : t = -2 ∨ t = 3) : t ^ 2 - t - 6 = 0 := by
   sorry
